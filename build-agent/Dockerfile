@@ -1,15 +1,19 @@
-FROM jenkins/agent:4.13-3-jdk17
+FROM ubuntu:22.04
 
-USER root
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
 RUN apt-get update && \
     apt-get install -y \
+    openjdk-17-jdk \
     python3 python3-pip python3-venv python3-dev python3-kubernetes \
     curl wget git unzip \
     snapd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Download Jenkins agent JAR
+RUN curl -fsSL https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/4.13/remoting-4.13.jar -o /usr/share/jenkins/agent.jar
 
 # Configure Python
 RUN python3 -m pip install --upgrade pip setuptools wheel && \
@@ -55,7 +59,12 @@ ENV PATH="/usr/local/go/bin:$PATH"
 RUN echo '#!/bin/bash\nmultipass start || true' > /usr/local/bin/start-multipass && \
     chmod +x /usr/local/bin/start-multipass
 
-# Switch back to jenkins user
+# Create jenkins user
+RUN useradd -m -s /bin/bash jenkins && \
+    mkdir -p /workspace && \
+    chown jenkins:jenkins /workspace
+
+# Switch to jenkins user
 USER jenkins
 
 WORKDIR /workspace
