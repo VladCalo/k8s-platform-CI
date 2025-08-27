@@ -2,14 +2,23 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Configure DNS and network
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
+    echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+
 # Install system dependencies
 RUN apt-get update && \
     apt-get install -y \
-    python3 python3-pip python3-venv \
+    python3 python3-pip python3-venv python3-dev python3-kubernetes \
     curl wget git unzip \
     snapd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Configure Python
+RUN python3 -m pip install --upgrade pip setuptools wheel && \
+    ln -sf /usr/bin/python3 /usr/local/bin/python && \
+    ln -sf /usr/bin/pip3 /usr/local/bin/pip
 
 # Install Terraform
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
@@ -26,7 +35,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install kubectl
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl" && \
+RUN curl -LO "https://dl.k8s.io/release/v1.28.0/bin/linux/arm64/kubectl" && \
     chmod +x kubectl && \
     mv kubectl /usr/local/bin/
 
