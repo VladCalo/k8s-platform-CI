@@ -1,6 +1,6 @@
 # K8s Platform CI
 
-Minimal CI setup for testing Ephemeral Environment Factory and GitOps Platform Factory. I used RPI5 for my Jenkins
+Minimal CI setup for testing Ephemeral Environment Factory and GitOps Platform Factory. I used RPI5 for my Jenkins (!!! ARM64 docker images)
 
 ## Setup Steps
 
