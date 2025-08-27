@@ -22,10 +22,8 @@ docker-compose logs jenkins | grep "Jenkins initial admin password"
 # 5. Start build-env container
 docker-compose -f build-env/docker-compose.yml up -d
 
-# 6. Enter Jenkins container
 docker exec -it jenkins bash
 
-# 7. From inside Jenkins, enter build-env container
 docker exec -it k8s-platform-ci-build-env bash
 
 # 8. Inside build-env container, test tools:
