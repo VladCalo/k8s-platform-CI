@@ -12,8 +12,8 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Download Jenkins agent JAR
-RUN curl -fsSL https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/4.13/remoting-4.13.jar -o /usr/share/jenkins/agent.jar
+# Download Jenkins agent JAR to temp location
+RUN curl -fsSL https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/4.13/remoting-4.13.jar -o /tmp/agent.jar
 
 # Configure Python
 RUN python3 -m pip install --upgrade pip setuptools wheel && \
@@ -59,10 +59,11 @@ ENV PATH="/usr/local/go/bin:$PATH"
 RUN echo '#!/bin/bash\nmultipass start || true' > /usr/local/bin/start-multipass && \
     chmod +x /usr/local/bin/start-multipass
 
-# Create jenkins user
+# Create jenkins user and setup directories
 RUN useradd -m -s /bin/bash jenkins && \
-    mkdir -p /workspace && \
-    chown jenkins:jenkins /workspace
+    mkdir -p /workspace /usr/share/jenkins && \
+    mv /tmp/agent.jar /usr/share/jenkins/ && \
+    chown jenkins:jenkins /workspace /usr/share/jenkins
 
 # Switch to jenkins user
 USER jenkins
