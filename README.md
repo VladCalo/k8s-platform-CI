@@ -1,5 +1,7 @@
 # K8s Platform CI
 
+
+!!! Bad architecture -> fix it
 ## Quick Setup
 
 ```bash
