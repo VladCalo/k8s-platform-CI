@@ -2,9 +2,7 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Configure DNS and network
-RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
-    echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+
 
 # Install system dependencies
 RUN apt-get update && \
@@ -34,10 +32,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install kubectl
-RUN curl -LO "https://dl.k8s.io/release/v1.28.0/bin/linux/arm64/kubectl" && \
-    chmod +x kubectl && \
-    mv kubectl /usr/local/bin/
+# Install kubectl via snap
+RUN snap install kubectl --classic
 
 # Install Go
 RUN curl -fsSL https://go.dev/dl/go1.21.0.linux-arm64.tar.gz | tar -C /usr/local -xzf - && \
