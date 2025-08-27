@@ -1,8 +1,6 @@
-FROM ubuntu:22.04
+FROM jenkins/inbound-agent:4.13-3-jdk17
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-
+USER root
 
 # Install system dependencies
 RUN apt-get update && \
@@ -56,5 +54,8 @@ ENV PATH="/usr/local/go/bin:$PATH"
 # Create startup script for multipass
 RUN echo '#!/bin/bash\nmultipass start || true' > /usr/local/bin/start-multipass && \
     chmod +x /usr/local/bin/start-multipass
+
+# Switch back to jenkins user
+USER jenkins
 
 WORKDIR /workspace

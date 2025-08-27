@@ -1,9 +1,0 @@
-services:
-  build-env:
-    build: .
-    container_name: build-env
-    restart: unless-stopped
-    platform: linux/arm64
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    privileged: true
