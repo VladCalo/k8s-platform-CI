@@ -6,35 +6,17 @@ services:
     platform: linux/arm64
     ports:
       - "8088:8080"
-      - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-    environment:
-      - JENKINS_AGENT_PORT=50000
-      - JENKINS_AGENT_PROTOCOLS=JNLP-connect,ping
-    networks:
-      - jenkins_network
-
-  build-agent:
-    build: ./build-agent
-    container_name: build-agent
-    restart: unless-stopped
-    platform: linux/arm64
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - build_workspace:/workspace
-    environment:
-      - JENKINS_URL=http://jenkins:8080
-      - JENKINS_SECRET=${JENKINS_SECRET}
-      - JENKINS_AGENT_NAME=build-agent-1
-    depends_on:
-      - jenkins
+      - /var/snap/multipass/common:/multipass
+      - /home:/home
+      - /usr/bin/multipass:/usr/bin/multipass
+      - /snap:/snap
     networks:
       - jenkins_network
 
 volumes:
   jenkins_home:
-  build_workspace:
 
 networks:
   jenkins_network:
