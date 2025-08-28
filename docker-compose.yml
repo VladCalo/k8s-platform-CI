@@ -1,0 +1,23 @@
+services:
+  jenkins:
+    build: ./jenkins
+    container_name: jenkins
+    restart: unless-stopped
+    platform: linux/arm64
+    ports:
+      - "8088:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/snap/multipass/common:/multipass
+      - /home:/home
+      - /usr/bin/multipass:/usr/bin/multipass
+      - /snap:/snap
+    networks:
+      - jenkins_network
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins_network:
+    driver: bridge
